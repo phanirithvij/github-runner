@@ -29,6 +29,7 @@ on:
 env:
   ENV_RUN_ENVIRONMENT: pytest
   ENV_INIT_SCRIPT: mypy/env_init.sh
+  SRC_PATH: mypy/mypy/
 
 jobs:
   unittest:
@@ -102,7 +103,7 @@ jobs:
       - name: 🟢 自动化测试
         run: |
           pip install -r ${{ inputs.CASE_PATH }}/requirements.txt > /dev/null 2>&1
-          bash pytest.sh -d ${{ inputs.CASE_PATH }} -g -s "${{ inputs.NOT_RUN_MARK }}"
+          bash ${{ env.SRC_path }}/pytest.sh -d ${{ inputs.CASE_PATH }} -g -s "${{ inputs.NOT_RUN_MARK }}"
 
       ################################################################
 
