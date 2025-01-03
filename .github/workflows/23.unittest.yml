@@ -101,7 +101,7 @@ jobs:
 
       - name: 🟢 自动化测试
         run: |
-          pip install -r ${{ inputs.CASE_PATH }}/requirements.txt > /dev/null 2>&1 && \
+          pip install -r mypy/requirements_test.txt > /dev/null 2>&1 && \
           bash mypy/pytest.sh -d ${{ inputs.CASE_PATH }} -g -s "${{ inputs.NOT_RUN_MARK }}"
 
       ################################################################
