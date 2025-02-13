@@ -36,7 +36,7 @@ on:
         default: "ffmpeg libreoffice poppler-utils wkhtmltopdf"
 
       SIMPLE_RUN:
-        description: "是否简单运行（不安装程序依赖和字体）"
+        description: "是否简单运行（不安装程序依赖和字体，也不安装 mypy）"
         type: boolean
         required: false
         default: true
@@ -118,7 +118,7 @@ on:
         required: false
 
       SIMPLE_RUN:
-        description: "是否安装程序依赖和字体"
+        description: "是否简单运行（不安装程序依赖和字体，也不安装 mypy）"
         type: boolean
         required: false
         default: false
@@ -223,8 +223,7 @@ jobs:
 
       - name: 安装依赖程序
         uses: ConorMacBride/install-package@v1.1.0
-        if: ${{ ! inputs.SIMPLE_RUN }}
-        # if: steps.cache.outputs.cache-hit != 'true'  # 是否命中缓存
+        if: ${{ ! inputs.SIMPLE_RUN && steps.cache.outputs.cache-hit != 'true' }}
         with:
           apt: ${{ inputs.DEPENDENT_BINARY }}
           choco: ${{ inputs.DEPENDENT_BINARY }}
@@ -235,7 +234,7 @@ jobs:
           bash mypy/mypy/build/install_font.sh ${{ env.FONT_DIR }}
 
       - name: 初始化运行环境
-        if: steps.cache.outputs.cache-hit != 'true' # 未命中缓存
+        if: ${{ ! inputs.SIMPLE_RUN }}
         run: |
           bash ${{ env.ENV_INIT_SCRIPT }}
 
