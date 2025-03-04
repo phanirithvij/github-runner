@@ -174,11 +174,11 @@ jobs:
 
       # 在流水线执行脚本创建的文件夹都是 root 权限，而通过 action-debug 进入环境时 docker:runner 权限
       # 会导致无法操作这些文件或目录
-      - name: 安装第三方服务
-        if: ${{ runner.os == 'Linux' }}
-        continue-on-error: true
-        run: |
-          bash mypy/mypy/3party/init.sh
+      # - name: 安装第三方服务
+      #   if: ${{ runner.os == 'Linux' }}
+      #   continue-on-error: true
+      #   run: |
+      #     bash mypy/mypy/3party/init.sh
 
       - name: 创建软链
         continue-on-error: true
