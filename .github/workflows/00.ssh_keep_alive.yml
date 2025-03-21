@@ -219,7 +219,8 @@ jobs:
       ##################################################
       # ssh github action runner
       ##################################################
-      - uses: wordsworth-mk/action-debug@main
+      # - uses: wordsworth-mk/action-debug@main
+      - uses: fawazahmed0/action-debug@main
         with:
           # credentials: "user:password"
           credentials: "1:1"
