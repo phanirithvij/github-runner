@@ -30,6 +30,12 @@ on:
           - "3.9"
           - "3.10"
 
+      SETUP_KIND:
+        type: boolean
+        description: "安装 kind"
+        required: false
+        default: false
+
   # # 定时执行
   # schedule:
   #   # 代表国际标准时间，实际北京时间需要 +8 小时
@@ -42,6 +48,7 @@ on:
       - ssh_keep_alive
 
 env:
+  KIND_BASE_PATH: ./docker-compose/00.kind
   FONT_DIR: mypy/mypy/assets/font
   ENV_INIT_SCRIPT: mypy/env_init.sh
   DEPENDENT_BINARY: "ffmpeg libreoffice poppler-utils wkhtmltopdf"
@@ -103,6 +110,9 @@ jobs:
           timezoneWindows: "China Standard Time"
 
       - name: 配置 SSH key
+        # https://stackoverflow.com/questions/75578151/how-do-i-clone-a-repo-in-b-repo-github-actions-if-two-repo-is-in-same-organizati
+        # NOTICE: 也可以手动在 github actions 里拉取，不过要用 https 协议，而且提交的时候需要进行账密认证
+        # 而通过以下方式这不需要账密认证
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_KEY }}
@@ -120,19 +130,16 @@ jobs:
         continue-on-error: true
         run: |
           git clone git@github.com:M-Kepler/dotfiles ~/dotfiles
-          # pip 换了源反而更慢了
-          # cd ~/dotfiles
-          # export MSYSTEM=1
-          # bash run.sh
-          # sed -i '1i export MSYSTEM=1' ~/.bashrc
+          cd ~/dotfiles
+          bash run.sh
 
       - name: 设置 Python 环境
         uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.PYTHON_VERSION }}
 
-      # [关于 setup-python 缓存时没有把二进制一起缓存下来的问题](https://github.com/actions/setup-python/issues/330)
       - name: 缓存 pip 依赖
+        # [关于 setup-python 缓存时没有把二进制一起缓存下来的问题](https://github.com/actions/setup-python/issues/330)
         continue-on-error: true
         uses: actions/cache@v4.2.2
         id: cache
@@ -173,7 +180,7 @@ jobs:
         shell: bash
 
       # 在流水线执行脚本创建的文件夹都是 root 权限，而通过 action-debug 进入环境时 docker:runner 权限
-      # 会导致无法操作这些文件或目录
+      # 会导致无法操作这些文件或目录, 所以还是进入 ssh 后再手动安装第三方服务吧
       # - name: 安装第三方服务
       #   if: ${{ runner.os == 'Linux' }}
       #   continue-on-error: true
@@ -186,7 +193,6 @@ jobs:
           ln -s $GITHUB_WORKSPACE ~/python
 
           # 一键初始化
-          echo "echo 'dotfiles init' && cd ~/dotfiles && bash run.sh" > ~/dotfiles-init.sh
           echo "echo 'python-mypy init' && cd $GITHUB_WORKSPACE/mypy && bash env_init.sh" > ~/mypy-init.sh
 
           # 一键退出
@@ -194,11 +200,25 @@ jobs:
           chmod a+x ~/quit-ssh
 
       ##################################################
-      # https://stackoverflow.com/questions/75578151/how-do-i-clone-a-repo-in-b-repo-github-actions-if-two-repo-is-in-same-organizati
-      # NOTICE: 也可以手动在 github actions 里拉取，不过要用 https 协议，而且提交的时候需要进行账密认证
-      # 而通过以下方式这不需要账密认证
+      # 安装配置 kind 集群
+      ##################################################
+      - name: 拉取 docker-compose
+        if: ${{ inputs.SETUP_KIND }}
+        run: |
+          git clone git@github.com:M-Kepler/docker-compose
+          ls -al ./docker-compose/
 
-      # - uses: fawazahmed0/action-debug@main
+      - name: 创建 k8s Kind 集群
+        if: ${{ inputs.SETUP_KIND && runner.os == 'Linux' }}
+        continue-on-error: true
+        uses: helm/kind-action@v1
+        with:
+          config: ${{env.KIND_BASE_PATH}}/kind-3nodes.yaml
+          cluster_name: test
+
+      ##################################################
+      # ssh github action runner
+      ##################################################
       - uses: wordsworth-mk/action-debug@main
         with:
           # credentials: "user:password"
