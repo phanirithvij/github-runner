@@ -1,4 +1,4 @@
-name: 🍉 99. test
+name: 00. 🍉 test
 
 on:
   workflow_dispatch:
