@@ -205,7 +205,7 @@ jobs:
       - name: 拉取 docker-compose
         if: ${{ inputs.SETUP_KIND }}
         run: |
-          git clone git@github.com:M-Kepler/docker-compose
+          git clone git@github.com:M-Kepler/docker-compose ~/docker-compose
           ls -al ./docker-compose/
 
       - name: 创建 k8s kind 集群
@@ -219,8 +219,8 @@ jobs:
       ##################################################
       # ssh github action runner
       ##################################################
-      # - uses: wordsworth-mk/action-debug@main
-      - uses: fawazahmed0/action-debug@main
+      # - uses: fawazahmed0/action-debug@main
+      - uses: wordsworth-mk/action-debug@main
         with:
           # credentials: "user:password"
           credentials: "1:1"
