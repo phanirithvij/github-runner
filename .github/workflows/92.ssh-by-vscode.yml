@@ -1,4 +1,4 @@
-name: 00. 🍉 test
+name: 99. 🍉 ssh-by-vscode
 
 on:
   workflow_dispatch:
