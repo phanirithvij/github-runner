@@ -148,6 +148,7 @@ jobs:
           key: ${{ env.pythonLocation }}-${{ hashFiles('mypy/requirements.txt') }}
 
       - name: 缓存 apt 包
+        if: ${{ runner.os == 'Linux' }}
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: ${{ env.DEPENDENT_BINARY }} # 要安装的软件包的空格分隔列表
