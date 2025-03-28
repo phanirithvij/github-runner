@@ -13,6 +13,11 @@ jobs:
   ssh-by-vscode:
     runs-on: ubuntu-latest
     steps:
+      - name: 创建软链
+        continue-on-error: true
+        run: |
+          ln -s $GITHUB_WORKSPACE ~/workspace
+
       - name: 配置 SSH key
         # https://stackoverflow.com/questions/75578151/how-do-i-clone-a-repo-in-b-repo-github-actions-if-two-repo-is-in-same-organizati
         # NOTICE: 也可以手动在 github actions 里拉取，不过要用 https 协议，而且提交的时候需要进行账密认证

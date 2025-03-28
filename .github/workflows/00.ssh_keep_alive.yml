@@ -191,7 +191,7 @@ jobs:
       - name: 创建软链
         continue-on-error: true
         run: |
-          ln -s $GITHUB_WORKSPACE ~/python
+          ln -s $GITHUB_WORKSPACE ~/workspace
 
           # 一键初始化
           echo "echo 'python-mypy init' && cd $GITHUB_WORKSPACE/mypy && bash env_init.sh" > ~/mypy-init.sh
