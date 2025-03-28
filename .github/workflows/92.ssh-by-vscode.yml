@@ -5,6 +5,7 @@ on:
     inputs:
       REPOSITORY:
         type: string
+        default: M-Kepler/Golang
         description: "代码仓库"
         required: false
 
