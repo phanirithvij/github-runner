@@ -207,7 +207,7 @@ jobs:
         if: ${{ inputs.SETUP_KIND }}
         run: |
           git clone git@github.com:M-Kepler/docker-compose ~/docker-compose
-          ls -al ./docker-compose/
+          ls -al ~/docker-compose/
 
       - name: 创建 k8s kind 集群
         if: ${{ inputs.SETUP_KIND && runner.os == 'Linux' }}
