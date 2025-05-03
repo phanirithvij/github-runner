@@ -206,6 +206,8 @@ jobs:
       - name: 拉取 docker-compose
         if: ${{ inputs.SETUP_KIND }}
         run: |
+          echo "ENABLE_K8S_TOOL=1" >> ~/.bashrc
+          echo "ENABLE_K8S_TOOL=1" >> ~/.zshrc
           git clone git@github.com:M-Kepler/docker-compose ~/docker-compose
           ls -al ~/docker-compose/
 
