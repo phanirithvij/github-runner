@@ -212,7 +212,7 @@ jobs:
       - name: 创建 k8s kind 集群
         if: ${{ inputs.SETUP_KIND && runner.os == 'Linux' }}
         continue-on-error: true
-        uses: helm/kind-action@v1
+        uses: helm/kind-action@v1.12.0
         with:
           config: ${{env.KIND_BASE_PATH}}/kind-3nodes.yaml
           cluster_name: test
