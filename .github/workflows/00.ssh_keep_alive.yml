@@ -181,16 +181,6 @@ jobs:
           path: Python # 相对 $GITHUB_WORKSPACE 的路径
           # submodules: true
 
-      - name: 拉取 Golang 代码
-        uses: actions/checkout@v4
-        env:
-          MYPY_ACCESS_TOKEN: ${{ secrets.MYPY_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
-        with:
-          token: ${{ env.MYPY_ACCESS_TOKEN }}
-          repository: M-Kepler/Golang
-          path: Golang # 相对 $GITHUB_WORKSPACE 的路径
-          # submodules: true
-
       - name: 安装字体
         if: ${{ runner.os == 'Linux' }}
         run: |
