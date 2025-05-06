@@ -179,7 +179,7 @@ jobs:
           token: ${{ env.MYPY_ACCESS_TOKEN }}
           repository: M-Kepler/Python
           path: Python # 相对 $GITHUB_WORKSPACE 的路径
-          submodules: true
+          # submodules: true
 
       - name: 拉取 Golang 代码
         uses: actions/checkout@v4
@@ -189,7 +189,7 @@ jobs:
           token: ${{ env.MYPY_ACCESS_TOKEN }}
           repository: M-Kepler/Golang
           path: Golang # 相对 $GITHUB_WORKSPACE 的路径
-          submodules: true
+          # submodules: true
 
       - name: 安装字体
         if: ${{ runner.os == 'Linux' }}
