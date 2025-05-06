@@ -22,6 +22,12 @@ on:
         required: false
         default: false
 
+      SSH_WITH_VSCODE:
+        type: boolean
+        description: "用 vscode 连接远程"
+        required: false
+        default: false
+
       PYTHON_VERSION:
         type: choice
         description: "python 版本"
@@ -224,6 +230,11 @@ jobs:
       ##################################################
       # - uses: fawazahmed0/action-debug@main
       - uses: wordsworth-mk/action-debug@main
+        if: ${{ ! inputs.SSH_WITH_VSCODE }}
         with:
           # credentials: "user:password"
           credentials: "1:1"
+
+      - name: 通过 vscode 连接到 github action
+        if: ${{ inputs.SSH_WITH_VSCODE }}
+        uses: fawazahmed0/action-debug-vscode@main
