@@ -54,7 +54,6 @@ on:
       - ssh_keep_alive
 
 env:
-  KIND_BASE_PATH: ~/docker-compose/00.kind
   FONT_DIR: mypy/mypy/assets/font
   ENV_INIT_SCRIPT: mypy/env_init.sh
   DEPENDENT_BINARY: "ffmpeg libreoffice poppler-utils wkhtmltopdf"
@@ -144,6 +143,11 @@ jobs:
         with:
           python-version: ${{ inputs.PYTHON_VERSION }}
 
+      - name: 设置 Go 环境
+        uses: actions/setup-go@v5.4.0
+        with:
+          go-version: "1.23.x"
+
       - name: 缓存 pip 依赖
         # [关于 setup-python 缓存时没有把二进制一起缓存下来的问题](https://github.com/actions/setup-python/issues/330)
         continue-on-error: true
@@ -222,7 +226,7 @@ jobs:
         continue-on-error: true
         uses: helm/kind-action@v1.12.0
         with:
-          config: ${{env.KIND_BASE_PATH}}/kind-3nodes.yaml
+          config: ~/docker-compose/00.kind/kind-3nodes.yaml
           cluster_name: test
 
       ##################################################
